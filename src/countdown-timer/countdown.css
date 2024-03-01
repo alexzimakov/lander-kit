@@ -1,0 +1,88 @@
+:host {
+  --digit-height: 28px;
+  --digit-gap: 2px;
+  --digit-pad-x: 8px;
+  --digit-color: #1f2937;
+  --digit-bg-color: #d1d5db;
+  --digit-border-radius: 2px;
+  --reel-gap: 20px;
+  --reel-border-radius: 8px;
+  --delimiter-color: #9ca3af;
+
+  position: relative;
+  display: inline-flex;
+  margin: 0;
+  padding: 0;
+  font-weight: 700;
+  font-size: 0.875rem;
+  font-family: ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  font-variant-numeric: tabular-nums;
+}
+
+.digit {
+  display: inline-flex;
+  justify-content: center;
+  align-items: top;
+  overflow: hidden;
+  box-sizing: border-box;
+  height: var(--digit-height);
+  padding: 0 var(--digit-pad-x);
+  border-radius: var(--digit-border-radius);
+  background: var(--digit-bg-color);
+  color: var(--digit-color);
+}
+
+.digit::before {
+  content: attr(data-value);
+  line-height: var(--digit-height);
+  text-align: center;
+  white-space: pre;
+}
+
+.digit[data-prev-value]::before {
+  content: attr(data-prev-value) '\A' attr(data-value);
+  animation: countdown-move ease-in-out 0.7s forwards;
+}
+
+.reel {
+  display: inline-flex;
+  border-radius: var(--reel-border-radius);
+}
+
+.reel > :first-child {
+  border-top-left-radius: inherit;
+  border-bottom-left-radius: inherit;
+}
+
+.reel > :last-child {
+  border-top-right-radius: inherit;
+  border-bottom-right-radius: inherit;
+}
+
+.reel > .digit + .digit {
+  margin-left: var(--digit-gap);
+}
+
+.delimiter {
+  display: inline-flex;
+  flex-shrink: 0;
+  justify-content: center;
+  align-items: center;
+  width: var(--reel-gap);
+  color: var(--delimiter-color);
+}
+
+.delimiter::before {
+  content: ':';
+}
+
+@keyframes countdown-move {
+  from {
+    transform: translateY(0%);
+  }
+
+  to {
+    transform: translateY(-100%);
+  }
+}
