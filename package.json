@@ -1,7 +1,7 @@
 {
   "name": "lander-kit",
   "description": "A set of web components to use on your landing pages.",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": true,
   "type": "module",
   "browserslist": "defaults",
