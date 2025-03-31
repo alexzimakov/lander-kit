@@ -8,7 +8,7 @@ export function stripIndent(str) {
   let minIndent = 0;
   if (lines.length > 0) {
     lines.forEach((line) => {
-      const matches = line.match(/^ */);
+      const matches = line.match(/^[ \t]*(?=\S)/gm);
       if (matches) {
         const indent = matches[0].length;
         if (indent > 0 && (minIndent === 0 || indent < minIndent)) {
