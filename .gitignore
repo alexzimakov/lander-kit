@@ -6,3 +6,4 @@ storybook-static
 !.npmrc
 !.stylelintrc.json
 !.storybook
+!.github
