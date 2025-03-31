@@ -1,0 +1,40 @@
+:host {
+  --title-margin: 0 0 4px;
+  --title-font-size: 18px;
+  --title-font-weight: 700;
+  --title-line-height: 28px;
+  --title-color: #101828;
+  --message-font-size: 16px;
+  --message-font-weight: 400;
+  --message-line-height: 24px;
+  --message-color: #4a5565;
+  --options-gap: 16px;
+  --options-margin: 16px 0 0;
+
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+
+.title {
+  margin: var(--title-margin);
+  font-size: var(--title-font-size);
+  font-weight: var(--title-font-weight);
+  line-height: var(--title-line-height);
+  color: var(--title-color);
+  text-wrap: balance;
+}
+
+slot[name=""] {
+  display: grid;
+  gap: var(--options-gap);
+  margin: var(--options-margin);
+}
+
+slot[name="message"] {
+  font-size: var(--message-font-size);
+  font-weight: var(--message-font-weight);
+  line-height: var(--message-line-height);
+  color: var(--message-color);
+  text-wrap: balance;
+}

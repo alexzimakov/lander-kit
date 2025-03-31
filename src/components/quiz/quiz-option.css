@@ -1,0 +1,71 @@
+:host {
+  --max-width: 576px;
+  --padding: 16px 16px 16px 24px;
+  --font-size: 14px;
+  --font-weight: 500;
+  --line-height: 20px;
+  --color: #111827;
+  --checked-color: #fff;
+  --background: #fff;
+  --checked-background: #111827;
+  --border-width: 1px;
+  --border-style: solid;
+  --border-color: #d1d5db;
+  --border-radius: 8px;
+  --checked-border-color: #374151;
+  --shadow: rgb(0 0 0 / 5%) 0px 1px 2px 0px;
+  --checked-shadow: none;
+  --focus-ring-color: #374151;
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 2px;
+  --check-icon-color: inherit;
+
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+.input {
+  position: absolute;
+  opacity: 0;
+}
+
+.label {
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  padding: var(--padding);
+  font-family: inherit;
+  font-size: var(--font-size);
+  font-weight: var(--font-weight);
+  line-height: var(--line-height);
+  color: var(--color);
+  text-align: left;
+  background: var(--background);
+  border-color: var(--border-color);
+  border-style: var(--border-style);
+  border-width: var(--border-width);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+}
+
+.check-icon {
+  visibility: hidden;
+  color: var(--check-icon-color);
+}
+
+.input:focus-visible ~ .label {
+  outline: var(--focus-ring-color) solid var(--focus-ring-width);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.input:checked ~ .label {
+  --color: var(--checked-color);
+  --background: var(--checked-background);
+  --border-color: var(--checked-border-color);
+  --shadow: var(--checked-shadow);
+}
+
+.input:checked ~ .label > .check-icon {
+  visibility: visible;
+}

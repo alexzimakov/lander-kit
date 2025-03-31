@@ -1,0 +1,8 @@
+:host {
+  --gap: 40px;
+}
+
+.container {
+  display: grid;
+  gap: var(--gap);
+}

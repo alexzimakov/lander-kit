@@ -1,0 +1,123 @@
+:host {
+  /* Button */
+  --button-height: 40px;
+  --button-padding-inline: 19px;
+  --button-font-size: 16px;
+  --button-font-weight: 500;
+  --button-line-height: 24px;
+  --button-disabled-opacity: 0.5;
+  --button-color: #fff;
+  --outline-button-color: #111827;
+  --button-background: #111827;
+  --outline-button-background: #fff;
+  --button-border-width: 1px;
+  --button-border-style: solid;
+  --button-border-color: #374151;
+  --outline-button-border-color: #d1d5db;
+  --button-border-radius: 8px;
+  --icon-button-size: 40px;
+  --icon-button-border-radius: 50%;
+
+  /* Controls */
+  --controls-margin-top: 40px;
+  --controls-gap: 12px;
+
+  /* Page */
+  --page-padding: 0;
+  --page-max-width: 576px;
+  --page-background: none;
+  --page-border-radius: 12px;
+  --page-border-width: 1px;
+  --page-border-style: solid;
+  --page-border-color: transparent;
+  --page-shadow: none;
+
+
+  display: flex;
+  flex-direction: column;
+}
+
+.body {
+  box-sizing: border-box;
+  display: flex;
+  flex-grow: 1;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: #f9fafb;
+}
+
+.page {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: var(--page-max-width);
+  padding: var(--page-padding);
+  background: var(--page-background);
+  border-color: var(--page-border-color);
+  border-style: var(--page-border-style);
+  border-width: var(--page-border-width);
+  border-radius: var(--page-border-radius);
+  box-shadow: var(--page-shadow);
+}
+
+.btn {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--button-height);
+  padding-block: 0;
+  padding-inline: var(--button-padding-inline);
+  font-family: inherit;
+  font-size: var(--button-font-size);
+  font-weight: var(--button-font-weight);
+  line-height: var(--button-line-height);
+  color: var(--button-color);
+  appearance: none;
+  cursor: default;
+  background: var(--button-background);
+  border-color: var(--button-border-color);
+  border-style: var(--button-border-style);
+  border-width: var(--button-border-width);
+  border-radius: var(--button-border-radius);
+}
+
+.btn[hidden] {
+  display: none;
+}
+
+.btn[data-disabled] {
+  pointer-events: none;
+  opacity: var(--button-disabled-opacity);
+}
+
+.btn_outline {
+  --button-color: var(--outline-button-color);
+  --button-background: var(--outline-button-background);
+  --button-border-color: var(--outline-button-border-color);
+}
+
+.btn_icon {
+  --button-border-radius: var(--icon-button-border-radius);
+
+  width: var(--icon-button-size);
+  height: var(--icon-button-size);
+  padding: 0;
+}
+
+.controls {
+  display: flex;
+  gap: var(--controls-gap);
+  align-items: center;
+  justify-content: center;
+  margin-top: var(--controls-margin-top);
+}
+
+.progress-bar {
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+  background: conic-gradient(blue 75%, cornflowerblue 0%);
+  border-radius: 50%;
+  clip-path: inset(30px);
+}
