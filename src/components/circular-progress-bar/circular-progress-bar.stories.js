@@ -1,4 +1,5 @@
 import { html } from '../../util/html.js';
+import { buildAttrs } from '../../util/build-attrs.js';
 import './circular-progress-bar.js';
 
 export default {
@@ -10,14 +11,16 @@ export default {
     trackColor,
     progressColor,
     rounded,
-  }) => createCircularProgressBar({
-    'value': value,
-    'size': size,
-    'track-width': trackWidth,
-    'track-color': trackColor,
-    'progress-color': progressColor,
-    'rounded': rounded,
-  }),
+  }) => html`
+    <circular-progress-bar ${buildAttrs({
+      'value': value,
+      'size': size,
+      'track-width': trackWidth,
+      'track-color': trackColor,
+      'progress-color': progressColor,
+      'rounded': rounded,
+    })}></circular-progress-bar>
+  `,
   argTypes: {
     value: { control: 'number', min: 0, max: 100 },
     size: { control: 'number', min: 0 },
@@ -43,7 +46,7 @@ export const AnimateProgress = {
     progressColor,
     rounded,
   }) => html`
-    ${createCircularProgressBar({
+    <circular-progress-bar ${buildAttrs({
       'id': 'animated-progress-bar',
       'value': value,
       'size': size,
@@ -51,21 +54,9 @@ export const AnimateProgress = {
       'track-color': trackColor,
       'progress-color': progressColor,
       'rounded': rounded,
-    })}
+    })}></circular-progress-bar>
     <script>
       document.querySelector('#animated-progress-bar').animateProgress(0, 100, '5s');
     </script>
   `,
 };
-
-/**
- * @param {object} props
- * @returns {string}
- */
-function createCircularProgressBar(props) {
-  const attrs = Object.entries(props)
-    .filter(([, value]) => value != null)
-    .map(([attr, value]) => `${attr}="${value}"`)
-    .join(' ');
-  return html`<circular-progress-bar ${attrs}></circular-progress-bar>`;
-}

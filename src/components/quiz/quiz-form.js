@@ -1,12 +1,14 @@
 import { QuizPage } from './quiz-page.js';
 import { QuizQuestionChangeEvent } from './quiz-question.js';
-import { html } from '../../util/html.js';
+import { html, htmlEscape } from '../../util/html.js';
+import { t } from '../../util/format.js';
 import styles from './quiz-form.css?inline';
 
 export class QuizForm extends HTMLElement {
   constructor() {
     super();
     this._submitHandler = null;
+    this.progressTitle = this.getAttribute('progress-title') || 'Question {n} of {total}';
     this.backButtonLabel = this.getAttribute('back-button-label') || 'Back';
     this.nextButtonLabel = this.getAttribute('next-button-label') || 'Next';
     this.submitButtonLabel = this.getAttribute('submit-button-label') || 'Finish';
@@ -27,29 +29,36 @@ export class QuizForm extends HTMLElement {
   /**
    * @return {boolean}
    */
+  get shouldHideProgress() {
+    const value = this.getAttribute('hide-progress');
+    return value != null && value !== 'false';
+  }
+
+  /**
+   * @return {boolean}
+   */
   get shouldHideBackButton() {
-    return this.hasAttribute('hide-back-button');
+    const value = this.getAttribute('hide-back-button');
+    return value != null && value !== 'false';
   }
 
   /**
-   * @returns {HTMLSlotElement}
+   * @returns {{
+   *   childrenSlot: HTMLSlotElement;
+   *   backButton: HTMLButtonElement;
+   *   nextButton: HTMLButtonElement;
+   *   progressTitle: HTMLElement;
+   *   progressBar: HTMLElement;
+   * }}
    */
-  get defaultSlot() {
-    return this.shadowRoot.querySelector('slot[name=""]');
-  }
-
-  /**
-   * @returns {HTMLButtonElement | null}
-   */
-  get backButton() {
-    return this.shadowRoot.querySelector('button.prev');
-  }
-
-  /**
-   * @returns {HTMLButtonElement}
-   */
-  get nextButton() {
-    return this.shadowRoot.querySelector('button.next');
+  get elements() {
+    return {
+      childrenSlot: this.shadowRoot.querySelector('[data-element="children-slot"]'),
+      backButton: this.shadowRoot.querySelector('[data-element="back-button"]'),
+      nextButton: this.shadowRoot.querySelector('[data-element="next-button"]'),
+      progressTitle: this.shadowRoot.querySelector('[data-element="progress-title"]'),
+      progressBar: this.shadowRoot.querySelector('[data-element="progress-bar"]'),
+    };
   }
 
   /**
@@ -143,38 +152,43 @@ export class QuizForm extends HTMLElement {
     const style = document.createElement('style');
     style.innerText = styles;
 
-    let backButton = '';
-    if (!this.shouldHideBackButton) {
-      backButton = html`
-        <button
-          class="btn btn_icon btn_outline prev"
-          type="button"
-          aria-label="${this.backButtonLabel}"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 20 20"
-            width="20"
-            height="20"
-            fill="currentColor"
-          >
-            <path fill-rule="evenodd" d="M17 10a.75.75 0 0 1-.75.75H5.612l4.158 3.96a.75.75 0 1 1-1.04 1.08l-5.5-5.25a.75.75 0 0 1 0-1.08l5.5-5.25a.75.75 0 1 1 1.04 1.08L5.612 9.25H16.25A.75.75 0 0 1 17 10Z" clip-rule="evenodd" />
-          </svg>
-        </button>
-      `;
-    }
-
     if (!this.shadowRoot) {
       this.attachShadow({ mode: 'open' });
     }
     this.shadowRoot.innerHTML = html`
       <div class="body">
         <div class="page">
-          <slot name=""></slot>
+          <div class="progress ${this.shouldHideProgress ? 'hidden' : ''}">
+            <p class="progress__title" data-element="progress-title">
+              !${this.progressTitle}
+            </p>
+            <div class="progress__bar" data-element="progress-bar"></div>
+          </div>
+
+          <slot data-element="children-slot"></slot>
           <div class="controls">
-            ${backButton}
-            <button class="btn next" type="button">
-              ${this.nextButtonLabel}
+            <button
+              class="btn btn_icon btn_outline ${this.shouldHideBackButton ? 'hidden' : ''}"
+              type="button"
+              data-element="back-button"
+              aria-label="!${this.backButtonLabel}"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                width="20"
+                height="20"
+                fill="currentColor"
+              >
+                <path fill-rule="evenodd" d="M17 10a.75.75 0 0 1-.75.75H5.612l4.158 3.96a.75.75 0 1 1-1.04 1.08l-5.5-5.25a.75.75 0 0 1 0-1.08l5.5-5.25a.75.75 0 1 1 1.04 1.08L5.612 9.25H16.25A.75.75 0 0 1 17 10Z" clip-rule="evenodd" />
+              </svg>
+            </button>
+            <button
+              class="btn"
+              type="button"
+              data-element="next-button"
+            >
+              !${this.nextButtonLabel}
             </button>
           </div>
         </div>
@@ -185,44 +199,64 @@ export class QuizForm extends HTMLElement {
 
   updatePages() {
     const pages = this.pages;
-    const currentPage = pages.find((page) => !page.hidden);
-    pages.forEach((page) => {
-      if (page !== currentPage) {
-        page.hidden = true;
-      }
-    });
+    if (pages.length > 0) {
+      const currentPage = pages.find((page) => !page.hidden) || pages[0];
+      pages.forEach((page) => {
+        if (page !== currentPage) {
+          page.hidden = true;
+        }
+      });
+    }
   }
 
   updateButtons() {
     const currentPage = this.currentPage;
     if (currentPage) {
-      if (this.backButton) {
-        this.backButton.hidden = this.isFirstPage(currentPage);
+      const elements = this.elements;
+
+      if (elements.backButton) {
+        elements.backButton.hidden = this.isFirstPage(currentPage);
       }
 
       if (currentPage.valid) {
-        this.nextButton.removeAttribute('data-disabled');
+        elements.nextButton.removeAttribute('data-disabled');
+        elements.nextButton.removeAttribute('tabindex');
       } else {
-        this.nextButton.setAttribute('data-disabled', '');
+        elements.nextButton.setAttribute('data-disabled', '');
+        elements.nextButton.setAttribute('tabindex', -1);
       }
 
       if (this.isLastPage(currentPage)) {
-        this.nextButton.setAttribute('type', 'submit');
-        this.nextButton.innerText = this.submitButtonLabel;
+        elements.nextButton.setAttribute('type', 'submit');
+        elements.nextButton.innerText = htmlEscape(this.submitButtonLabel);
       } else {
-        this.nextButton.setAttribute('type', 'button');
-        this.nextButton.innerText = this.nextButtonLabel;
+        elements.nextButton.setAttribute('type', 'button');
+        elements.nextButton.innerText = htmlEscape(this.nextButtonLabel);
       }
     }
+  }
+
+  updateProgress() {
+    const elements = this.elements;
+    const pages = this.pages;
+    const currentPageIndex = pages.findIndex((page) => !page.hidden);
+    elements.progressTitle.innerText = t(this.progressTitle, {
+      n: currentPageIndex + 1,
+      total: pages.length,
+    });
+    elements.progressBar.style.setProperty('--progress-value', (
+      (currentPageIndex + 1) / pages.length * 100
+    ).toFixed('2') + '%');
   }
 
   handleChildrenChange() {
     this.updatePages();
     this.updateButtons();
+    this.updateProgress();
   }
 
   handleNextButtonClick() {
-    const nextButton = this.nextButton;
+    const nextButton = this.elements.nextButton;
     const currentPage = this.currentPage;
     if (currentPage && currentPage.valid) {
       if (nextButton.type === 'submit') {
@@ -230,6 +264,7 @@ export class QuizForm extends HTMLElement {
       } else {
         this.goToPageAfter(currentPage);
         this.updateButtons();
+        this.updateProgress();
       }
     }
   }
@@ -239,6 +274,7 @@ export class QuizForm extends HTMLElement {
     if (currentPage) {
       this.goToPageBefore(currentPage);
       this.updateButtons();
+      this.updateProgress();
     }
   }
 
@@ -264,20 +300,18 @@ export class QuizForm extends HTMLElement {
   }
 
   connectedCallback() {
-    this.defaultSlot.addEventListener('slotchange', this.handleChildrenChange);
-    this.nextButton.addEventListener('click', this.handleNextButtonClick);
-    if (this.backButton) {
-      this.backButton.addEventListener('click', this.handleBackButtonClick);
-    }
+    const elements = this.elements;
+    elements.childrenSlot.addEventListener('slotchange', this.handleChildrenChange);
+    elements.nextButton.addEventListener('click', this.handleNextButtonClick);
+    elements.backButton.addEventListener('click', this.handleBackButtonClick);
     this.addEventListener(QuizQuestionChangeEvent.type, this.handleQuizQuestionChange);
   }
 
   disconnectedCallback() {
-    this.defaultSlot.removeEventListener('slotchange', this.handleChildrenChange);
-    this.nextButton.removeEventListener('click', this.handleNextButtonClick);
-    if (this.backButton) {
-      this.backButton.removeEventListener('click', this.handleBackButtonClick);
-    }
+    const elements = this.elements;
+    elements.childrenSlot.removeEventListener('slotchange', this.handleChildrenChange);
+    elements.nextButton.removeEventListener('click', this.handleNextButtonClick);
+    elements.backButton.removeEventListener('click', this.handleBackButtonClick);
     this.removeEventListener(QuizQuestionChangeEvent.type, this.handleQuizQuestionChange);
   }
 }

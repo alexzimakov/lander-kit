@@ -45,7 +45,7 @@ export class QuizRadioGroup extends QuizQuestion {
       this.attachShadow({ mode: 'open' });
     }
     this.shadowRoot.innerHTML = html`
-      <div class="title">${title}</div>
+      <div class="title">!${title}</div>
       <slot name="message"></slot>
       <slot name=""></slot>
     `;

@@ -1,5 +1,6 @@
 import { QuizQuestion, QuizQuestionChangeEvent } from './quiz-question.js';
 import { QuizOption, QuizOptionChangeEvent } from './quiz-option.js';
+import { html } from '../../util/html.js';
 import styles from './quiz-question.css?inline';
 
 export class QuizCheckboxGroup extends QuizQuestion {
@@ -41,8 +42,8 @@ export class QuizCheckboxGroup extends QuizQuestion {
     if (!this.shadowRoot) {
       this.attachShadow({ mode: 'open' });
     }
-    this.shadowRoot.innerHTML = /* html */ `
-      <div class="title">${title}</div>
+    this.shadowRoot.innerHTML = html`
+      <div class="title">!${title}</div>
       <slot name="message"></slot>
       <slot name=""></slot>
     `;

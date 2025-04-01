@@ -11,17 +11,23 @@ export function html(templateStrings, ...values) {
 
   let result = '';
   values.forEach((value, i) => {
-    let prevTemplateString = raw[i];
+    let literal = raw[i];
 
-    if (Array.isArray(value)) {
+    if (value == null) {
+      value = '';
+    } else if (Array.isArray(value)) {
       value = value.join('');
+    } else if (typeof value === 'object') {
+      value = JSON.stringify(value);
+    } else {
+      value = String(value);
     }
 
-    if (prevTemplateString.endsWith('!')) {
+    if (literal.endsWith('!')) {
       value = htmlEscape(value);
-      prevTemplateString = prevTemplateString.slice(0, -1);
+      literal = literal.slice(0, -1);
     }
-    result += prevTemplateString;
+    result += literal;
     result += value;
   });
   result += raw[raw.length - 1];
@@ -29,6 +35,10 @@ export function html(templateStrings, ...values) {
   return stripIndent(result);
 }
 
+/**
+ * @param {string} str
+ * @returns {string}
+ */
 export function htmlEscape(str) {
   return str.replace(/&/g, '&amp;')
     .replace(/>/g, '&gt;')

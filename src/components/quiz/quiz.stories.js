@@ -1,21 +1,26 @@
 import { fn } from '@storybook/test';
 import { html } from '../../util/html.js';
+import { buildAttrs } from '../../util/build-attrs.js';
 import './quiz.js';
 
 export default {
   tags: ['autodocs'],
   render: ({
+    shouldHideBackButton,
+    shouldHideProgress,
     backButtonLabel,
     nextButtonLabel,
     submitButtonLabel,
   }) => {
     return html`
-      <quiz-form
-        id="quiz"
-        back-button-label="${backButtonLabel}"
-        next-button-label="${nextButtonLabel}"
-        submit-button-label=${submitButtonLabel}
-      >
+      <quiz-form ${buildAttrs({
+        'id': 'quiz',
+        'hide-back-button': shouldHideBackButton,
+        'hide-progress': shouldHideProgress,
+        'back-button-label': backButtonLabel,
+        'next-button-label': nextButtonLabel,
+        'submit-button-label': submitButtonLabel,
+      })}>
         <quiz-page>
           <quiz-radio-group name="sex" title="What is your gender?">
             <div slot="message">
@@ -88,11 +93,15 @@ export default {
     `;
   },
   argTypes: {
+    shouldHideBackButton: { control: 'boolean' },
+    shouldHideProgress: { control: 'boolean' },
     backButtonLabel: { control: 'text' },
     nextButtonLabel: { control: 'text' },
     onSubmit: { action: 'onSubmit' },
   },
   args: {
+    shouldHideBackButton: false,
+    shouldHideProgress: false,
     backButtonLabel: 'Back',
     nextButtonLabel: 'Next',
     submitButtonLabel: 'Submit',
