@@ -26,6 +26,10 @@
   --controls-gap: 12px;
   --controls-align: center;
 
+  /* Body */
+  --body-padding: 16px;
+  --body-background: #f9fafb;
+
   /* Page */
   --page-padding: 0;
   --page-max-width: 576px;
@@ -63,8 +67,8 @@
   flex-grow: 1;
   align-items: center;
   justify-content: center;
-  padding: 16px;
-  background: #f9fafb;
+  padding: var(--body-padding);
+  background: var(--body-background);
 }
 
 .page {

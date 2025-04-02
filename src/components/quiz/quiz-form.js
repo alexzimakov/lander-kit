@@ -1,6 +1,6 @@
 import { QuizPage } from './quiz-page.js';
 import { QuizQuestionChangeEvent } from './quiz-question.js';
-import { html, htmlEscape } from '../../util/html.js';
+import { html } from '../../util/html.js';
 import { t } from '../../util/format.js';
 import styles from './quiz-form.css?inline';
 
@@ -228,10 +228,10 @@ export class QuizForm extends HTMLElement {
 
       if (this.isLastPage(currentPage)) {
         elements.nextButton.setAttribute('type', 'submit');
-        elements.nextButton.innerText = htmlEscape(this.submitButtonLabel);
+        elements.nextButton.innerText = this.submitButtonLabel;
       } else {
         elements.nextButton.setAttribute('type', 'button');
-        elements.nextButton.innerText = htmlEscape(this.nextButtonLabel);
+        elements.nextButton.innerText = this.nextButtonLabel;
       }
     }
   }
