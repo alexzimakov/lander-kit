@@ -1,0 +1,90 @@
+:host {
+  --digit-height: 36px;
+  --digit-inline-padding: 10px;
+  --digit-gap: 2px;
+  --digit-color: #111827;
+  --digit-background: rgb(13 35 68 / 19%);
+  --digit-border-radius: 2px;
+  --reel-gap: 20px;
+  --reel-border-radius: 9px;
+  --delimiter-color: #111827;
+
+  position: relative;
+  display: inline-flex;
+  padding: 0;
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.digit {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: stretch;
+  justify-content: center;
+  height: var(--digit-height);
+  padding: 0 var(--digit-inline-padding);
+  overflow: hidden;
+  color: var(--digit-color);
+  background: var(--digit-background);
+  border-radius: var(--digit-border-radius);
+}
+
+.digit::before {
+  line-height: var(--digit-height);
+  text-align: center;
+  white-space: pre;
+  content: attr(data-value);
+}
+
+@keyframes move-digit {
+  from {
+    transform: translateY(0%);
+  }
+
+  to {
+    transform: translateY(-100%);
+  }
+}
+
+.digit[data-prev-value]::before {
+  content: attr(data-prev-value) '\A' attr(data-value);
+  animation: move-digit ease-in-out 0.7s forwards;
+}
+
+.reel {
+  display: inline-flex;
+  border-radius: var(--reel-border-radius);
+}
+
+.reel > :first-child {
+  border-top-left-radius: inherit;
+  border-bottom-left-radius: inherit;
+}
+
+.reel > :last-child {
+  border-top-right-radius: inherit;
+  border-bottom-right-radius: inherit;
+}
+
+.reel > .digit + .digit {
+  margin-left: var(--digit-gap);
+}
+
+.delimiter {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: var(--reel-gap);
+  color: var(--delimiter-color);
+}
+
+.delimiter::before {
+  content: ':';
+}
+
+*[hidden] {
+  display: none !important;
+}
