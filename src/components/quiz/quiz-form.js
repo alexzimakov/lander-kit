@@ -156,41 +156,39 @@ export class QuizForm extends HTMLElement {
       this.attachShadow({ mode: 'open' });
     }
     this.shadowRoot.innerHTML = html`
-      <div class="body">
-        <div class="page">
-          <div class="progress ${this.shouldHideProgress ? 'hidden' : ''}">
-            <p class="progress__title" data-element="progress-title">
-              !${this.progressTitle}
-            </p>
-            <div class="progress__bar" data-element="progress-bar"></div>
-          </div>
+      <div class="page">
+        <div class="progress ${this.shouldHideProgress ? 'hidden' : ''}">
+          <p class="progress__title" data-element="progress-title">
+            !${this.progressTitle}
+          </p>
+          <div class="progress__bar" data-element="progress-bar"></div>
+        </div>
 
-          <slot data-element="children-slot"></slot>
-          <div class="controls">
-            <button
-              class="btn btn_icon btn_outline ${this.shouldHideBackButton ? 'hidden' : ''}"
-              type="button"
-              data-element="back-button"
-              aria-label="!${this.backButtonLabel}"
+        <slot data-element="children-slot"></slot>
+        <div class="controls">
+          <button
+            class="btn btn_icon btn_outline ${this.shouldHideBackButton ? 'hidden' : ''}"
+            type="button"
+            data-element="back-button"
+            aria-label="!${this.backButtonLabel}"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+              width="20"
+              height="20"
+              fill="currentColor"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-                width="20"
-                height="20"
-                fill="currentColor"
-              >
-                <path fill-rule="evenodd" d="M17 10a.75.75 0 0 1-.75.75H5.612l4.158 3.96a.75.75 0 1 1-1.04 1.08l-5.5-5.25a.75.75 0 0 1 0-1.08l5.5-5.25a.75.75 0 1 1 1.04 1.08L5.612 9.25H16.25A.75.75 0 0 1 17 10Z" clip-rule="evenodd" />
-              </svg>
-            </button>
-            <button
-              class="btn"
-              type="button"
-              data-element="next-button"
-            >
-              !${this.nextButtonLabel}
-            </button>
-          </div>
+              <path fill-rule="evenodd" d="M17 10a.75.75 0 0 1-.75.75H5.612l4.158 3.96a.75.75 0 1 1-1.04 1.08l-5.5-5.25a.75.75 0 0 1 0-1.08l5.5-5.25a.75.75 0 1 1 1.04 1.08L5.612 9.25H16.25A.75.75 0 0 1 17 10Z" clip-rule="evenodd" />
+            </svg>
+          </button>
+          <button
+            class="btn"
+            type="button"
+            data-element="next-button"
+          >
+            !${this.nextButtonLabel}
+          </button>
         </div>
       </div>
     `;
