@@ -1,7 +1,7 @@
 {
   "name": "lander-kit",
   "description": "A set of web components for use on landing pages.",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "main": "index.js",
   "type": "module",
   "scripts": {

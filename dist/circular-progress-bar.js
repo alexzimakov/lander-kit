@@ -24,7 +24,7 @@
           cx="${s}"
           cy="${o}"
           fill="none"
-          stroke="#22c55e"
+          stroke="#111827"
           stroke-width="${i}"
           stroke-dasharray="${n}"
           stroke-dashoffset="${a}"
