@@ -305,7 +305,7 @@ export class CircularProgressBar extends HTMLElement {
           cx="${cx}"
           cy="${cy}"
           fill="none"
-          stroke="#22c55e"
+          stroke="#111827"
           stroke-width="${strokeWidth}"
           stroke-dasharray="${strokeDasharray}"
           stroke-dashoffset="${strokeDashOffset}"
