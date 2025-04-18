@@ -8,15 +8,30 @@ const ROOT_DIR = fileURLToPath(new URL('../', import.meta.url));
 const DIST_DIR = join(ROOT_DIR, 'dist');
 const COMPONENTS_DIR = join(ROOT_DIR, 'src/components');
 
+const entryPoints = await getEntryPoints();
 await clearDist();
-await esbuild.build({
-  entryPoints: await getEntryPoints(),
-  target: 'es2022',
-  minify: true,
-  bundle: true,
-  outdir: DIST_DIR,
-  plugins: [inlineCssPlugin()],
-});
+await buildJS(entryPoints);
+await buildJS(entryPoints, { minify: true, outExtension: '.min.js' });
+
+/**
+ *
+ * @param {string[]} entryPoints
+ * @param {{
+ *   minify?: boolean;
+ *   outExtension?: string;
+ * }} [opts]
+ */
+async function buildJS(entryPoints, opts = {}) {
+  await esbuild.build({
+    entryPoints,
+    target: 'es2022',
+    minify: opts.minify || false,
+    bundle: true,
+    outdir: DIST_DIR,
+    plugins: [inlineCssPlugin()],
+    outExtension: opts.outExtension ? { '.js': opts.outExtension } : {},
+  });
+}
 
 async function clearDist() {
   await rm(DIST_DIR, { force: true, recursive: true });
